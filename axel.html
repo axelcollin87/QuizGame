@@ -8,16 +8,22 @@
         <title>Document</title>
     </head>
     <body>
-        <header><h1 class="title">Quiz Time!</h1></header>
-        <div class="contentContainer">
-            <div class="questionsForm">
-                <form>
+        <header>
+            <h1 class="title">Quiz Time!</h1>
+            <p id="nameParagraph">qwef</p>
+            <p id="mailParagraph">qwef</p>
+        </header>
+        <div class="content-container">
+            <div class="personal-form-container">
+                <form id="personal-form" class="personal-form">
+                    <h2>Personal info</h2>
                     <label for="firstName">First Name:</label>
                     <input
                         type="text"
                         id="firstName"
                         name="firstName"
                         pattern="[A-Za-z]+"
+                        placeholder="Enter your first name here (required)"
                         required />
                     <br />
                     <label for="lastName">Last Name:</label>
@@ -26,13 +32,47 @@
                         id="lastName"
                         name="lastName"
                         pattern="[A-Za-z]+"
+                        placeholder="Enter your last name here (required)"
                         required />
                     <br />
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required />
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        placeholder="Enter a valid email here (required)" />
+                    <br />
                     <br />
                     <input type="submit" value="Submit" />
                 </form>
+            </div>
+            <div class="question-container">
+                <!-- 
+                        * A question will consist of following elements 
+                        * generated from json and inserted here with js
+
+                        Radioquestion
+                        * <h3> with Question #
+                        * <p> Question text
+                        * Radio 1
+                        * Radio 2
+                        * Radio 3
+                        * Radio 4
+                        
+                        Text question
+                        * <h3> With question #
+                        * <p> Question text
+                        * <text input>
+
+                        Checkbox question (multi choice)
+                        * <h3> With question #
+                        * <p> Question text
+                        * Checkbox 1
+                        * Checkbox 2
+                        * Checkbox 3
+                        * Checkbox 4
+                -->
             </div>
         </div>
     </body>
