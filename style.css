@@ -25,13 +25,43 @@ header p {
     margin-bottom: 0px;
 }
 
-.personal-form-container {
-}
-
 .personal-form {
     width: 40%;
     margin-left: auto;
     margin-right: auto;
     display: flex;
     flex-direction: column;
+}
+
+#question-container {
+    display: none;
+    margin-top: 40px;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(235, 235, 235);
+    border: solid 1px rgba(0, 0, 0, 0.326);
+    padding: 10px;
+}
+
+.para {
+    color: rgb(255, 0, 0);
+}
+
+.button-container {
+    display: flex;
+}
+
+#submitBtn {
+    display: none;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #007bff; /* A common blue color */
+    color: white;
+    font-size: 30px;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px; /* Slightly rounded corners */
+    cursor: pointer; /* Indicates a clickable button */
 }
