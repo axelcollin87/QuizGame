@@ -52,6 +52,15 @@ header p {
     display: flex;
 }
 
+.questionP {
+    margin-top: 50px;
+    font-size: 20px;
+}
+
+.questionP:first-child {
+    margin-top: 10px;
+}
+
 #submitBtn {
     display: none;
     margin-top: 30px;
