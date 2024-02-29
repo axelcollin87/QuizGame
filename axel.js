@@ -42,10 +42,10 @@ submitButton.addEventListener("click", () => {
                 }
                 break;
             case "radio":
-                const radioSelection = document.querySelector(
+                const selectedRadio = document.querySelector(
                     `input[name='${question.id}']:checked`
                 );
-                if (radioSelection.value === question.answer) {
+                if (selectedRadio.value === question.answer) {
                     console.log(`${question.answer} is correct!`);
                 } else {
                     console.log(
@@ -54,7 +54,17 @@ submitButton.addEventListener("click", () => {
                 }
                 break;
 
-            // figure out how to do checkbox case, probably use querySelectorAll.
+            case "checkbox":
+                const selectedCB = document.querySelectorAll(
+                    `input[name='${question.id}']:checked`
+                );
+                let selectedArr = Array.from(selectedCB).map((cb) => cb.value);
+                matchingArrays =
+                    question.answer.every((answer) =>
+                        selectedArr.includes(answer)
+                    ) && selectedArr.length === question.answer.length;
+                console.log(matchingArrays);
+                break;
         }
     });
 });
