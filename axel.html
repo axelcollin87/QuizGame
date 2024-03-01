@@ -10,73 +10,45 @@
     <body>
         <header>
             <h1 class="title">Quiz Time!</h1>
-            <p id="playerParagraph">Current player:</p>
-            <p id="nameParagraph"></p>
-            <p id="mailParagraph"></p>
+            <p id="player-paragraph">Current player:</p>
+            <p id="name-paragraph"></p>
+            <p id="mail-paragraph"></p>
         </header>
         <div class="content-container">
             <div class="personal-form-container">
                 <form id="personal-form" class="personal-form">
-                    <h2>Personal info</h2>
-                    <label for="firstName">First Name:</label>
+                    <h2 id="form-heading">Enter your personal info:</h2>
+                    <label for="first-name">First Name:</label>
                     <input
                         type="text"
-                        id="firstName"
+                        id="first-name"
                         name="firstName"
-                        pattern="[A-Za-z]+"
-                        placeholder="Enter your first name here (required)"
-                        required />
+                        placeholder="Enter your first name here (required)" />
+                    <p class="input-error" id="first-name-error"></p>
                     <br />
-                    <label for="lastName">Last Name:</label>
+                    <label for="last-name">Last Name:</label>
                     <input
                         type="text"
-                        id="lastName"
+                        id="last-name"
                         name="lastName"
-                        pattern="[A-Za-z]+"
-                        placeholder="Enter your last name here (required)"
-                        required />
+                        placeholder="Enter your last name here (required)" />
+                    <p class="input-error" id="last-name-error"></p>
                     <br />
                     <label for="email">Email:</label>
                     <input
-                        type="email"
+                        type="text"
                         id="email"
                         name="email"
-                        required
                         placeholder="Enter a valid email here (required)" />
+                    <p class="input-error" id="email-error"></p>
                     <br />
                     <br />
                     <input id="form-submit" type="submit" value="Submit" />
                 </form>
             </div>
-            <div id="question-container">
-                <!-- 
-                        * A question will consist of following elements 
-                        * generated from json and inserted here with js
-                        
-                        Text question
-                        * <h3> With question #
-                        * <p> Question text
-                        * <text input>
-
-                        Radioquestion
-                        * <h3> with Question #
-                        * <p> Question text
-                        * Radio 1
-                        * Radio 2
-                        * Radio 3
-                        * Radio 4
-
-                        Checkbox question (multi choice)
-                        * <h3> With question #
-                        * <p> Question text
-                        * Checkbox 1
-                        * Checkbox 2
-                        * Checkbox 3
-                        * Checkbox 4
-                -->
-            </div>
+            <div id="question-container"></div>
             <div class="button-container">
-                <button id="submitBtn">Submit quiz!</button>
+                <button id="submit-btn">Submit quiz!</button>
             </div>
         </div>
     </body>
