@@ -2,10 +2,12 @@ const fName = document.getElementById("first-name");
 const lName = document.getElementById("last-name");
 const email = document.getElementById("email");
 const submitButton = document.getElementById("submit-btn");
+const scoreText = document.getElementById("total-score");
 const questionContainer = document.getElementById("question-container");
 const personalForm = document.getElementById("personal-form");
 
-let questionData = [];
+let selectedQuestions = [];
+let questionCount = 1;
 
 // Validate personal form
 function validatePersonalForm() {
@@ -94,32 +96,84 @@ function loadQuestions() {
     )
         .then((response) => response.json())
         .then((data) => {
-            questionData = data.questions;
+            const textQuestions = data.questions.filter(
+                (q) => q.type === "text"
+            );
+            const radioQuestions = data.questions.filter(
+                (q) => q.type === "radio"
+            );
+            const checkboxQuestions = data.questions.filter(
+                (q) => q.type === "checkbox"
+            );
 
-            data.questions.forEach((q) => {
+            const selectedQuestionIds = new Set();
+
+            // Add questions until we have three unique ones of each type
+            while (selectedQuestions.length < 7) {
+                let type, questionArray;
+
+                if (selectedQuestions.length % 3 === 0) {
+                    type = "text";
+                    questionArray = textQuestions;
+                } else if (selectedQuestions.length % 3 === 1) {
+                    type = "radio";
+                    questionArray = radioQuestions;
+                } else {
+                    type = "checkbox";
+                    questionArray = checkboxQuestions;
+                }
+
+                let newQuestion;
+                do {
+                    newQuestion =
+                        questionArray[
+                            Math.floor(Math.random() * questionArray.length)
+                        ];
+                } while (selectedQuestionIds.has(newQuestion.id));
+
+                selectedQuestions.push(newQuestion);
+                selectedQuestionIds.add(newQuestion.id);
+            }
+
+            selectedQuestions.forEach((q) => {
+                // Start of the question div
+
+                let questionHtml = `<div class="question" id="q${q.id}">`;
+
                 switch (q.type) {
                     case "text":
-                        questionContainer.innerHTML += `<p class="questionP">${q.question}</p>`;
-                        questionContainer.innerHTML += `<input type='text' name='${q.id}' placeholder='Type answer here (required) '/>`;
-                        questionContainer.innerHTML += `<p class="input-error" id='${q.id}'>`;
+                        questionHtml += `<p class="questionP">${questionCount}. ${q.question}</p>`;
+                        questionHtml += `<input type='text' name='${q.id}' placeholder='Type answer here (required) '/>`;
+                        questionHtml += `<p class="input-error" id='${q.id}'></p>`;
+                        questionCount += 1;
                         break;
                     case "radio":
-                        questionContainer.innerHTML += `<p class="questionP">${q.question}</p>`;
+                        questionHtml += `<p class="questionP">${questionCount}. ${q.question}</p>`;
                         q.options.forEach((option) => {
-                            questionContainer.innerHTML += `<input type='radio' name='${q.id}' value='${option}'/>`;
-                            questionContainer.innerHTML += `<label for='${option}'>${option}</label>`;
-                            questionContainer.innerHTML += `<br />`;
+                            questionHtml += `<input type='radio' name='${q.id}' value='${option}'/>`;
+                            questionHtml += `<label for='${option}'>${option}</label>`;
+                            questionHtml += `<br />`;
                         });
+                        questionHtml += `<p class="input-error" id='${q.id}'></p>`;
+                        questionCount += 1;
                         break;
                     case "checkbox":
-                        questionContainer.innerHTML += `<p class="questionP">${q.question} (Multi choice)</p>`;
+                        questionHtml += `<p class="questionP">${questionCount}. ${q.question} (Multi choice)</p>`;
                         q.options.forEach((option) => {
-                            questionContainer.innerHTML += `<input type='checkbox' name='${q.id}' value='${option}'/>`;
-                            questionContainer.innerHTML += `<label for='${option}'>${option}</label>`;
-                            questionContainer.innerHTML += `<br />`;
+                            questionHtml += `<input type='checkbox' name='${q.id}' value='${option}'/>`;
+                            questionHtml += `<label for='${option}'>${option}</label>`;
+                            questionHtml += `<br />`;
                         });
+                        questionHtml += `<p class="input-error" id='${q.id}'></p>`;
+                        questionCount += 1;
                         break;
                 }
+
+                // End of the question div
+                questionHtml += `</div>`;
+
+                // Append the entire question div to the container
+                questionContainer.innerHTML += questionHtml;
             });
         });
     questionContainer.style.display = "block";
@@ -131,18 +185,24 @@ submitButton.addEventListener("click", () => {
     let score = 0;
 
     if (checkRequiredAnswers()) {
-        questionData.forEach((question) => {
+        selectedQuestions.forEach((question) => {
             switch (question.type) {
                 case "text":
                     const textAnswer = document.querySelector(
                         `input[name='${question.id}']`
                     );
                     if (textAnswer.value === question.answer) {
-                        console.log(`${question.answer} is correct!`);
+                        document.getElementById(
+                            `q${question.id}`
+                        ).style.backgroundColor = "#adffad";
+                        score++;
                     } else {
-                        console.log(
-                            `Wrong answer, correct answer is: ${question.answer}`
-                        );
+                        document.getElementById(
+                            question.id
+                        ).textContent = `Correct answer: ${question.answer}`;
+                        document.getElementById(
+                            `q${question.id}`
+                        ).style.backgroundColor = "#ffadad";
                     }
                     break;
                 case "radio":
@@ -150,11 +210,17 @@ submitButton.addEventListener("click", () => {
                         `input[name='${question.id}']:checked`
                     );
                     if (selectedRadio.value === question.answer) {
-                        console.log(`${question.answer} is correct!`);
+                        document.getElementById(
+                            `q${question.id}`
+                        ).style.backgroundColor = "#adffad";
+                        score++;
                     } else {
-                        console.log(
-                            `Wrong answer, correct answer is: ${question.answer}`
-                        );
+                        document.getElementById(
+                            question.id
+                        ).textContent = `Correct answer: ${question.answer}`;
+                        document.getElementById(
+                            `q${question.id}`
+                        ).style.backgroundColor = "#ffadad";
                     }
                     break;
 
@@ -169,10 +235,27 @@ submitButton.addEventListener("click", () => {
                         question.answer.every((answer) =>
                             selectedArr.includes(answer)
                         ) && selectedArr.length === question.answer.length;
-                    console.log(matchingArrays);
+                    if (matchingArrays) {
+                        document.getElementById(
+                            `q${question.id}`
+                        ).style.backgroundColor = "#adffad";
+                        score++;
+                    } else {
+                        document.getElementById(
+                            question.id
+                        ).textContent = `Correct answer: ${question.answer}`;
+                        document.getElementById(
+                            `q${question.id}`
+                        ).style.backgroundColor = "#ffadad";
+                    }
                     break;
             }
         });
+
+        // Quiz submited, present score, remove sbmit button, add reset button.
+        submitButton.style.display = "none";
+        scoreText.style.display = "inline";
+        scoreText.innerText += ` ${score}/${selectedQuestions.length}`;
     } else {
         return;
     }
@@ -181,7 +264,7 @@ submitButton.addEventListener("click", () => {
 function checkRequiredAnswers() {
     let answered = true;
 
-    questionData.forEach((element) => {
+    selectedQuestions.forEach((element) => {
         if (element.type === "text") {
             document.getElementById(element.id).textContent = "";
             if (

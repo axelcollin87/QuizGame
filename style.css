@@ -78,8 +78,6 @@ header p {
     width: 70%;
     margin-left: auto;
     margin-right: auto;
-    background-color: rgb(235, 235, 235);
-    border: solid 1px rgba(0, 0, 0, 0.326);
     padding: 10px;
 }
 
@@ -115,4 +113,19 @@ header p {
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.question {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    background-color: #f3f3f3;
+    padding: 10px;
+}
+
+#total-score {
+    display: none;
+    margin-left: auto;
+    margin-right: auto;
 }
