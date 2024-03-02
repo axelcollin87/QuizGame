@@ -2,6 +2,7 @@ const fName = document.getElementById("first-name");
 const lName = document.getElementById("last-name");
 const email = document.getElementById("email");
 const submitButton = document.getElementById("submit-btn");
+const restartButton = document.getElementById("restart-btn");
 const scoreText = document.getElementById("total-score");
 const questionContainer = document.getElementById("question-container");
 const personalForm = document.getElementById("personal-form");
@@ -56,7 +57,7 @@ function isValidEmailFormat(email) {
     const stolenEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return stolenEmailRegex.test(email);
 }
-
+// Checks an input element if its empty or not.
 function inputEmpty(inputElement) {
     if (inputElement.value.trim() === "") {
         return true;
@@ -68,9 +69,8 @@ function inputEmpty(inputElement) {
 // Personal info submit
 // Adds current player info and calls loadQuestions function
 personalForm.addEventListener("submit", (event) => {
+    event.preventDefault();
     if (validatePersonalForm()) {
-        event.preventDefault();
-
         const namePara = document.getElementById("name-paragraph");
         const mailPara = document.getElementById("mail-paragraph");
 
@@ -83,14 +83,15 @@ personalForm.addEventListener("submit", (event) => {
         personalForm.innerHTML = "";
 
         loadQuestions();
-    } else {
-        event.preventDefault();
     }
 });
 
-// Loads the quiz form elements from api (dummy json from my github)
+// Loads the quiz form elements, builds 7 random questions from a 50 question pool.
+//
 // Displays the question container and submit button
 function loadQuestions() {
+    questionContainer.innerHTML = "";
+
     fetch(
         "https://raw.githubusercontent.com/axelcollin87/quizquestions/master/quiz_data.json"
     )
@@ -108,7 +109,7 @@ function loadQuestions() {
 
             const selectedQuestionIds = new Set();
 
-            // Add questions until we have three unique ones of each type
+            // This "logic" makes sure we get a spread over the different question types
             while (selectedQuestions.length < 7) {
                 let type, questionArray;
 
@@ -194,7 +195,7 @@ submitButton.addEventListener("click", () => {
                     if (textAnswer.value === question.answer) {
                         document.getElementById(
                             `q${question.id}`
-                        ).style.backgroundColor = "#adffad";
+                        ).style.borderColor = "#00c210";
                         score++;
                     } else {
                         document.getElementById(
@@ -202,17 +203,20 @@ submitButton.addEventListener("click", () => {
                         ).textContent = `Correct answer: ${question.answer}`;
                         document.getElementById(
                             `q${question.id}`
-                        ).style.backgroundColor = "#ffadad";
+                        ).style.borderColor = "#c20600";
                     }
                     break;
                 case "radio":
                     const selectedRadio = document.querySelector(
                         `input[name='${question.id}']:checked`
                     );
-                    if (selectedRadio.value === question.answer) {
+                    if (
+                        selectedRadio &&
+                        selectedRadio.value === question.answer
+                    ) {
                         document.getElementById(
                             `q${question.id}`
-                        ).style.backgroundColor = "#adffad";
+                        ).style.borderColor = "#00c210";
                         score++;
                     } else {
                         document.getElementById(
@@ -220,7 +224,7 @@ submitButton.addEventListener("click", () => {
                         ).textContent = `Correct answer: ${question.answer}`;
                         document.getElementById(
                             `q${question.id}`
-                        ).style.backgroundColor = "#ffadad";
+                        ).style.borderColor = "#c20600";
                     }
                     break;
 
@@ -238,7 +242,7 @@ submitButton.addEventListener("click", () => {
                     if (matchingArrays) {
                         document.getElementById(
                             `q${question.id}`
-                        ).style.backgroundColor = "#adffad";
+                        ).style.borderColor = "#00c210";
                         score++;
                     } else {
                         document.getElementById(
@@ -246,7 +250,7 @@ submitButton.addEventListener("click", () => {
                         ).textContent = `Correct answer: ${question.answer}`;
                         document.getElementById(
                             `q${question.id}`
-                        ).style.backgroundColor = "#ffadad";
+                        ).style.borderColor = "#c20600";
                     }
                     break;
             }
@@ -254,8 +258,9 @@ submitButton.addEventListener("click", () => {
 
         // Quiz submited, present score, remove sbmit button, add reset button.
         submitButton.style.display = "none";
+        restartButton.style.display = "block";
         scoreText.style.display = "inline";
-        scoreText.innerText += ` ${score}/${selectedQuestions.length}`;
+        scoreText.innerText = `Congratulations on completing the quiz! Your total score is: ${score} / ${selectedQuestions.length}`;
     } else {
         return;
     }
@@ -281,3 +286,11 @@ function checkRequiredAnswers() {
 
     return answered;
 }
+
+restartButton.addEventListener("click", () => {
+    selectedQuestions = [];
+    questionCount = 1;
+    scoreText.style.display = "none";
+    restartButton.style.display = "none";
+    loadQuestions();
+});
