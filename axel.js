@@ -10,6 +10,9 @@ const personalForm = document.getElementById("personal-form");
 let selectedQuestions = [];
 let questionCount = 1;
 
+// Add/Remove/Change this to control what questions will require an answer.
+let requiredQuestions = [2, 4, 7];
+
 // Validate personal form
 function validatePersonalForm() {
     const firstNameError = document.getElementById("first-name-error");
@@ -141,10 +144,14 @@ function loadQuestions() {
 
                 let questionHtml = `<div class="question" id="q${q.id}">`;
 
+                if (requiredQuestions.includes(questionCount)) {
+                    questionHtml += `<p class="question-req">Required question *</p>`;
+                }
+
                 switch (q.type) {
                     case "text":
                         questionHtml += `<p class="questionP">${questionCount}. ${q.question}</p>`;
-                        questionHtml += `<input type='text' name='${q.id}' placeholder='Type answer here (required) '/>`;
+                        questionHtml += `<input type='text' name='${q.id}' placeholder='Type answer here'/>`;
                         questionHtml += `<p class="input-error" id='${q.id}'></p>`;
                         questionCount += 1;
                         break;
@@ -259,34 +266,68 @@ submitButton.addEventListener("click", () => {
         // Quiz submited, present score, remove sbmit button, add reset button.
         submitButton.style.display = "none";
         restartButton.style.display = "block";
-        scoreText.style.display = "inline";
         scoreText.innerText = `Congratulations on completing the quiz! Your total score is: ${score} / ${selectedQuestions.length}`;
+        scoreText.style.display = "inline";
     } else {
         return;
     }
 });
 
+// Check for required questions to have some data
 function checkRequiredAnswers() {
     let answered = true;
 
-    selectedQuestions.forEach((element) => {
-        if (element.type === "text") {
-            document.getElementById(element.id).textContent = "";
-            if (
-                inputEmpty(
-                    document.querySelector(`input[name='${element.id}']`)
-                )
-            ) {
-                document.getElementById(element.id).textContent =
-                    "This question is required!";
-                answered = false;
-            }
+    const errTextParas = document.querySelectorAll(".input-error");
+    errTextParas.forEach((para) => (para.textContent = ""));
+
+    requiredQuestions.forEach((q) => {
+        let qId = q - 1;
+        switch (selectedQuestions[qId].type) {
+            case "text":
+                if (
+                    inputEmpty(
+                        document.querySelector(
+                            `input[name='${selectedQuestions[qId].id}']`
+                        )
+                    )
+                ) {
+                    document.getElementById(
+                        selectedQuestions[qId].id
+                    ).textContent = "This question is required!";
+                    answered = false;
+                }
+                break;
+            case "radio":
+                if (
+                    !document.querySelector(
+                        `input[name='${selectedQuestions[qId].id}']:checked`
+                    )
+                ) {
+                    document.getElementById(
+                        selectedQuestions[qId].id
+                    ).textContent = "This question is required!";
+                    answered = false;
+                }
+                break;
+            case "check":
+                if (
+                    !document.querySelector(
+                        `input[name='${selectedQuestions[qId].id}']:checked`
+                    )
+                ) {
+                    document.getElementById(
+                        selectedQuestions[qId].id
+                    ).textContent = "This question is required!";
+                    answered = false;
+                }
+                break;
         }
     });
 
     return answered;
 }
 
+// Restart quiz, reset needed variables
 restartButton.addEventListener("click", () => {
     selectedQuestions = [];
     questionCount = 1;

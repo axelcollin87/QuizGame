@@ -8,8 +8,7 @@ body {
     margin: 0;
     padding: 0;
 }
-
-header {
+1 header {
     margin: 0px;
 }
 
@@ -98,9 +97,14 @@ header p {
 }
 
 .questionP {
-    margin-top: 35px;
     font-size: 20px;
+    margin-top: 0;
     margin-bottom: 5px;
+}
+
+.question-req {
+    color: red;
+    margin: 0;
 }
 
 .questionP:first-child {
@@ -128,6 +132,7 @@ header p {
     margin-left: auto;
     margin-right: auto;
     margin-top: 10px;
+    border-radius: 5px;
     background-color: #f3f3f3;
     padding: 10px;
     border: solid 3px #c2060000;
